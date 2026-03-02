@@ -3,13 +3,14 @@
 Markdown2Anki is a Python script that converts Markdown files into Anki importable files.
 **Supported Markdown features include**:
 
-- Header H2 only
+- Header as Title/Question
+- Italic and Bold text
 - Math blocks (`$$ ... $$`)
 - Math inline (`$ ... $`)
 
 ## Usage
 
-clone this repository and run the following command:
+Clone this repository and run the following command:
 
 ```bash
 uv run ./main.py "path/to/input1.md" "path/to/input2.md" ...
@@ -27,10 +28,17 @@ python main.py "path/to/input1.md" "path/to/input2.md" ...
 ## Question 1
 
 Answer 1
-Answer _2_
 
 $$
 1+1=2
+$$
+
+## Question 2
+
+Answer 2
+
+$$
+\frac{2}{4} = \frac{1}{2}
 $$
 ```
 
@@ -42,4 +50,4 @@ The output (importable in Anki) is placed in the `output/` directory.
 
 1. Open Anki and go to `File > Import`.
 2. Select the generated file from the `output/` directory.
-3. Change the import settings on your need and click `Import`.
+3. Change the import settings to your needs and click `Import`.

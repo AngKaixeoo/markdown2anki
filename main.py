@@ -4,7 +4,7 @@ import markdown
 import sys
 import os
 import hashlib
-import base91  # Assuming you have a base91 library installed
+import base91
 
 CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(CURRENT_FOLDER, "output")
@@ -22,7 +22,7 @@ def main():
     for input_file in sys.argv[1:]:
         with open(input_file, "r") as f:
             content = f.read()
-        cards = content.split("##")
+        cards = re.split(r"#+", content)
         for card in cards:
             if not card.strip():
                 continue
@@ -44,7 +44,9 @@ def toAnki(card: str) -> list[str, str]:
         .replace("<br>$$", "$$")
     )
     html_description = (
-        markdown.markdown(description)
+        markdown.markdown(
+            description,
+        )
         .replace("<p>", "")
         .replace("</p>", "")
         .replace("<strong>", "<b>")
