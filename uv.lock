@@ -3,6 +3,34 @@ revision = 3
 requires-python = ">=3.11"
 
 [[package]]
+name = "base91"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/19/b0f1df635561be1bcd74c652a2e611ebf0a9d5f5f10be9d8421733e2cb04/base91-1.0.1.tar.gz", hash = "sha256:5b284a2ba3c97be1eb9473f3af94a9bf141d61005d836e75e645d2798da58799", size = 2331, upload-time = "2016-01-15T17:18:14.574Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/cf/4c92fa04c1703c2fb77ac9b7375a722c98279dd6eb0959479c2686687c20/base91-1.0.1-py3-none-any.whl", hash = "sha256:a1e605d0e762661eee73943dc33becf807890214f497896153b1851a56b357bf", size = 3419, upload-time = "2016-01-15T17:18:35.199Z" },
+]
+
+[[package]]
+name = "markdown"
+version = "3.10.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/f4/69fa6ed85ae003c2378ffa8f6d2e3234662abd02c10d216c0ba96081a238/markdown-3.10.2.tar.gz", hash = "sha256:994d51325d25ad8aa7ce4ebaec003febcce822c3f8c911e3b17c52f7f589f950", size = 368805, upload-time = "2026-02-09T14:57:26.942Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/de/1f/77fa3081e4f66ca3576c896ae5d31c3002ac6607f9747d2e3aa49227e464/markdown-3.10.2-py3-none-any.whl", hash = "sha256:e91464b71ae3ee7afd3017d9f358ef0baf158fd9a298db92f1d4761133824c36", size = 108180, upload-time = "2026-02-09T14:57:25.787Z" },
+]
+
+[[package]]
 name = "markdown2anki"
 version = "0.1.0"
-source = { virtual = ".venv" }
+source = { virtual = "." }
+dependencies = [
+    { name = "base91" },
+    { name = "markdown" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "base91", specifier = ">=1.0.1" },
+    { name = "markdown", specifier = ">=3.10.2" },
+]
