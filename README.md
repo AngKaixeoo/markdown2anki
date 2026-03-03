@@ -10,7 +10,7 @@ Markdown2Anki is a Python script that converts Markdown files into Anki importab
 
 ## Usage
 
-Clone this repository and run the following command:
+Clone this repository, install the dependencies, and run the following command:
 
 ```bash
 uv run ./main.py "path/to/input1.md" "path/to/input2.md" ...
