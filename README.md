@@ -1,6 +1,6 @@
 # Markdown2Anki
 
-Markdown2Anki is a Python script that converts Markdown files into Anki importable files.
+Markdown2Anki is a Python script that converts Markdown files into Anki importable files. (Only support Basic note)
 **Supported Markdown features include**:
 
 - Header as Title/Question

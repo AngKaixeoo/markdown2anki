@@ -28,7 +28,8 @@ def main():
                 continue
             title, text_replaced = toAnki(card)
             guid = generate_deterministic_guid64(title)
-            file.write(f"{guid}\t{title}\t{text_replaced}\t\n")
+            print(f"Processing card: {title} with GUID: {guid}")
+            file.write(f"{guid}\t{title}\t{text_replaced}\n")
 
 
 def toAnki(card: str) -> list[str, str]:
@@ -80,7 +81,7 @@ def generate_deterministic_guid64(input_str: str) -> str:
     int_as_bytes = guid64_int.to_bytes(8, byteorder="big")
 
     # 4. Return the base91-encoded representation
-    return base91.encode(int_as_bytes)
+    return base91.encode(int_as_bytes).replace("\"", "?")
 
 
 if __name__ == "__main__":
