@@ -10,6 +10,21 @@ CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(CURRENT_FOLDER, "output")
 # INPUT_FILE = os.path.join(CURRENT_FOLDER, "input.md")
 
+extensions = [
+    "pymdownx.arithmatex",
+]
+extension_configs = {
+    "pymdownx.arithmatex": {
+        "generic": True,
+        "tex_inline_wrap": ["<anki-mathjax>", "</anki-mathjax>"],
+        "tex_block_wrap": ['<anki-mathjax class="block">', "</anki-mathjax>"],
+        "preview": False,
+        "inline_syntax": ["dollar"],
+        "block_syntax": ["dollar"],
+        "smart_dollar": True,
+    }
+}
+
 
 def main():
     file = open(
@@ -45,9 +60,7 @@ def toAnki(card: str) -> list[str, str]:
         .replace("<br>$$", "$$")
     )
     html_description = (
-        markdown.markdown(
-            description,
-        )
+        markdown.markdown(description)
         .replace("<p>", "")
         .replace("</p>", "")
         .replace("<strong>", "<b>")
@@ -81,7 +94,7 @@ def generate_deterministic_guid64(input_str: str) -> str:
     int_as_bytes = guid64_int.to_bytes(8, byteorder="big")
 
     # 4. Return the base91-encoded representation
-    return base91.encode(int_as_bytes).replace("\"", "?")
+    return base91.encode(int_as_bytes).replace('"', "?")
 
 
 if __name__ == "__main__":
