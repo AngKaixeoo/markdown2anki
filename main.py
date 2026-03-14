@@ -10,20 +10,8 @@ CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(CURRENT_FOLDER, "output")
 # INPUT_FILE = os.path.join(CURRENT_FOLDER, "input.md")
 
-extensions = [
-    "pymdownx.arithmatex",
-]
-extension_configs = {
-    "pymdownx.arithmatex": {
-        "generic": True,
-        "tex_inline_wrap": ["<anki-mathjax>", "</anki-mathjax>"],
-        "tex_block_wrap": ['<anki-mathjax class="block">', "</anki-mathjax>"],
-        "preview": False,
-        "inline_syntax": ["dollar"],
-        "block_syntax": ["dollar"],
-        "smart_dollar": True,
-    }
-}
+extensions = []
+extension_configs = {}
 
 
 def main():
@@ -52,15 +40,32 @@ def toAnki(card: str) -> list[str, str]:
         return []
     lines = card.strip().splitlines()
     title = lines[0].strip()
-    description = (
-        "\n".join(lines[1:])
-        .strip()
-        .replace("\n", "<br>")
-        .replace("$$<br>", "$$")
-        .replace("<br>$$", "$$")
+    description = "<br>".join(lines[1:]).strip()
+
+    block_math: list[str] = []
+    inline_math: list[str] = []
+
+    def save_block_math(match: re.Match[str]) -> str:
+        expression = match.group(1).strip()
+        expression = re.sub(r"^(?:<br>\s*)+|(?:\s*<br>)+$", "", expression)
+        block_math.append(expression)
+        return f"ANKIBLOCKTOKEN{len(block_math) - 1}END"
+
+    def save_inline_math(match: re.Match[str]) -> str:
+        inline_math.append(match.group(1).strip())
+        return f"ANKIINLINETOKEN{len(inline_math) - 1}END"
+
+    description = re.sub(r"\$\$(.*?)\$\$", save_block_math, description, flags=re.DOTALL)
+    description = re.sub(
+        r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)",
+        save_inline_math,
+        description,
+        flags=re.DOTALL,
     )
-    html_description = (
-        markdown.markdown(description)
+    text = (
+        markdown.markdown(
+            description, extensions=extensions, extension_configs=extension_configs
+        )
         .replace("<p>", "")
         .replace("</p>", "")
         .replace("<strong>", "<b>")
@@ -68,12 +73,16 @@ def toAnki(card: str) -> list[str, str]:
         .replace("<em>", "<i>")
         .replace("</em>", "</i>")
     )
-    text_replaced = re.sub(
-        r"\$\$(.*?)\$\$", r"\[\1\]", html_description, flags=re.DOTALL
-    )
 
-    text_replaced = re.sub(r"\$(.*?)\$", r"\(\1\)", text_replaced)
-    return [title, text_replaced]
+    for i, expr in enumerate(block_math):
+        text = text.replace(
+            f"ANKIBLOCKTOKEN{i}END", f'<anki-mathjax class="block">{expr}</anki-mathjax>'
+        )
+
+    for i, expr in enumerate(inline_math):
+        text = text.replace(f"ANKIINLINETOKEN{i}END", f"<anki-mathjax>{expr}</anki-mathjax>")
+
+    return [title, text]
 
 
 def generate_deterministic_guid64(input_str: str) -> str:
